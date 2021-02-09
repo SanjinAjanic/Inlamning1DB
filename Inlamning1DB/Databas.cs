@@ -126,6 +126,7 @@ namespace Inlamning1DB
         }
         public int ReadPersonId(Person person)
         {
+
             string sql = "Select * FROM PersonT Where Firstname=@firstname AND lastname=@lastname";
 
             var parameters = new (string, string)[]
@@ -136,8 +137,8 @@ namespace Inlamning1DB
                 ("@FatherId", person.FatherId.ToString()),
                 ("@PersonId", person.ID.ToString()),
 
-
             };
+
             var dt = ExecuteQueryWithTable(sql, parameters);
             if (dt.Rows.Count > 0)
             {

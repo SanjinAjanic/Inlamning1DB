@@ -14,23 +14,6 @@ namespace Inlamning1DB
         {
 
             var filename = @"C:\Users\sanji\OneDrive\Skrivbord\personer.txt";
-            //List<Person> Familj = new List<Person>();
-            //using (StreamReader sa = new StreamReader(filename))
-
-            //{
-            //    List<string> splitArray = new List<string>();
-            //    while (sa.ReadLine() != null)
-            //    {
-
-            //        splitArray.Add(sa.ReadLine().Split(',');
-
-            //    }
-            //    foreach (var item in splitArray)
-            //    {
-            //        Console.WriteLine(item);
-            //    }
-            //}
-            // varför så komplicerad kod?
             List<Person> Familj = new List<Person>();
             if (File.Exists(filename))
             {
@@ -42,8 +25,8 @@ namespace Inlamning1DB
                     var name = split[0];
                     var lastName = split[1];
                     Familj.Add(new Person(name.ToString(), lastName.ToString()));
-                    //osv
-                    // db.DelitePerson(new Person { FirstName = firstName, LastName = lastName });
+
+                    
                 }
 
             }
@@ -51,12 +34,6 @@ namespace Inlamning1DB
             {
                 Console.WriteLine(item.FirstName);
             }
-            // Samma sak som koden ovan
-            // Ja blandade ihopp saker
-            // Keep it simple.
-            //okej tack :)
-            // ska det funka nu?
-
 
             Databas db = new Databas();
             db.DelitePerson(new Person { FirstName = "Denana", LastName = "Ajanic" });
