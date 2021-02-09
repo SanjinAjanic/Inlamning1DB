@@ -68,6 +68,7 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
+                ("@PersonId", person.ID.ToString()),
 
             };
             ExecuteQuery(sql, parameters);
@@ -76,7 +77,7 @@ namespace Inlamning1DB
         }
         public void DelitePerson(Person person)
         {
-            string sql = "DELETE FROM PersonT Where Firstname=@firstname AND lastname=@lastname";
+            string sql = "DELETE FROM PersonT Where PersonId=@PersonId";
                
             var parameters = new (string, string)[]
             {
@@ -84,6 +85,7 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
+                ("@PersonId", person.ID.ToString()),
 
 
             };
@@ -91,7 +93,7 @@ namespace Inlamning1DB
         }
         public DataTable ReadPerson(Person person)
         {
-            string sql = "Select * FROM PersonT Where Firstname=@firstname AND lastname=@lastname";
+            string sql = "Select * FROM PersonT Where Firstname=@firstname OR lastname=@lastname";
 
             var parameters = new (string, string)[]
             {
@@ -99,6 +101,7 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
+                ("@PersonId", person.ID.ToString()),
 
 
             };
@@ -106,7 +109,7 @@ namespace Inlamning1DB
         }
         public  void UpdatePerson(Person person)
         {
-            string sql = "UPDATE PersonT Set FirstName=@firstname, LastName=@firstname MotherId =@MotherId, FatherId=@FatherId WHERE FirstName=@firstname AND  LastName=@firstname";
+            string sql = "UPDATE PersonT Set FirstName=@FirstName, LastName=@LastName, MotherId=@MotherId, FatherId=@FatherId WHERE PersonId=@PersonId";
 
             var parameters = new (string, string)[]
             {
@@ -114,7 +117,8 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
-            
+                ("@PersonId", person.ID.ToString()),
+
 
 
             };
@@ -130,6 +134,7 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
+                ("@PersonId", person.ID.ToString()),
 
 
             };
