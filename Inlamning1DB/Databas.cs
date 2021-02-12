@@ -60,22 +60,22 @@ namespace Inlamning1DB
         }
         public void CreatePerson(Person person)
         {
-            string sql = "insert into PersonT (FirstName, LastName)" +
-                 "values (@FirstName, @LastName)";
+            string sql = "insert into PersonT (FirstName, LastName, MotherId, FatherId)" +
+                 "values (@FirstName, @LastName, @MotherId, @FatherId)";
             var parameters = new (string, string)[]
             {
                 ("@FirstName", person.FirstName),
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
-                ("@PersonId", person.ID.ToString()),
+             
 
             };
             ExecuteQuery(sql, parameters);
 
 
         }
-        public void DelitePerson(Person person)
+        public void DeletePerson(Person person)
         {
             string sql = "DELETE FROM PersonT Where PersonId=@PersonId";
                
@@ -93,16 +93,13 @@ namespace Inlamning1DB
         }
         public DataTable ReadPerson(Person person)
         {
-            string sql = "Select * FROM PersonT Where Firstname=@firstname OR lastname=@lastname";
+            string sql = "Select * FROM PersonT Where FirstName=@FirstName OR LastName=@LastName";
 
             var parameters = new (string, string)[]
             {
                 ("@FirstName", person.FirstName),
                 ("@LastName", person.LastName),
-                ("@MotherId", person.MotherId.ToString()),
-                ("@FatherId", person.FatherId.ToString()),
-                ("@PersonId", person.ID.ToString()),
-
+              
 
             };
             return ExecuteQueryWithTable(sql, parameters);
@@ -124,18 +121,33 @@ namespace Inlamning1DB
             };
             ExecuteQuery(sql, parameters);
         }
+        public void SetParents(Person person)
+        {
+            string sql = "UPDATE PersonT Set MotherId=@MotherId, FatherId=@FatherId WHERE PersonId=@PersonId";
+
+            var parameters = new (string, string)[]
+            {
+                
+                ("@MotherId", person.MotherId.ToString()),
+                ("@FatherId", person.FatherId.ToString()),
+                ("@PersonId", person.ID.ToString()),
+
+
+
+            };
+            ExecuteQuery(sql, parameters);
+        }
+
         public int ReadPersonId(Person person)
         {
 
-            string sql = "Select * FROM PersonT Where Firstname=@firstname AND lastname=@lastname";
+            string sql = "Select * FROM PersonT Where FirstName=@FirstName AND LastName=@LastName";
 
             var parameters = new (string, string)[]
             {
                 ("@FirstName", person.FirstName),
                 ("@LastName", person.LastName),
-                ("@MotherId", person.MotherId.ToString()),
-                ("@FatherId", person.FatherId.ToString()),
-                ("@PersonId", person.ID.ToString()),
+               
 
             };
 
@@ -147,6 +159,21 @@ namespace Inlamning1DB
                 return Id;
             }
             return 0;
+
+
+        }
+        public int IfNotExist(Person person)
+        {
+            var id = ReadPersonId(person);
+            if (id == 0)
+            {
+                
+                CreatePerson(person);
+                id = ReadPersonId(person);
+                person.ID = id;
+
+            }
+            return id;
         }
 
     }
