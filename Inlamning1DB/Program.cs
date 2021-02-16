@@ -12,68 +12,12 @@ namespace Inlamning1DB
         {
             var db = new Databas();
             db.Setup();
-            FindPerson();
-
-
-
-
-
-            /* var id = db.ReadPersonId(new Person { FirstName = "Denana", LastName = "Ajanic" });
-             if (id == 0)
-             {
-                 db.CreatePerson(new Person { FirstName = "Denana", LastName = "Ajanic" });
-                 id = db.ReadPersonId(new Person { FirstName = "Denana", LastName = "Ajanic" });
-             }
-             db.DeletePerson(new Person { FirstName = "Denana", LastName = "Ajanic", ID = id });
-             db.CreatePerson(new Person { FirstName = "Denana", LastName = "Ajanic" });
-             id = db.ReadPersonId(new Person { FirstName = "Elvedin", LastName = "Ajanic" });
-
-
-
-            // db.DeletePerson(new Person { FirstName = "Elvedin", LastName = "Ajanic", ID = id });
-
-             db.CreatePerson(new Person { FirstName = "Elvedin", LastName = "Ajanic" });
-             var Id = db.ReadPersonId(new Person { FirstName = "Sanjin", LastName = "Ajanic" });
-             db.UpdatePerson(new Person { FirstName = "Sanjin", LastName = "Ajanic", ID = Id });
-
-             */
-
-            //var sanjin = new Person() { FirstName = "Sanjin", LastName = "Ajanic" };
-
-            ////var dt = db.ReadPerson(new Person { FirstName = "Sanjin", LastName = "Ajanic" });
-            //var dt = db.ReadPerson(sanjin);
-
-
-            //if (dt.Rows.Count > 0)
-            //{
-            //    foreach (DataRow row in dt.Rows)
-            //    {
-            //        Console.WriteLine($"{row["FirstName"]}  {row["LastName"]} ");
-            //    }
-            //}
-
-            ////var Sanjin = db.ReadPersonId(new Person { FirstName = "Sanjin", LastName = "Ajanic" });
-            //var Sanjin = db.ReadPersonId(sanjin);
-            //var Elvedin = db.ReadPersonId(new Person { FirstName = "Elvedin", LastName = "Ajanic" });
-            //sanjin.FatherId = Elvedin;
-            //sanjin.LastName = "Coolman";
-            //var Denana = db.ReadPersonId(new Person { FirstName = "Denana", LastName = "Niksic" });
-            //db.SetParents(new Person { ID = Sanjin, FatherId = Elvedin, MotherId = Denana });
-            //var Asim = db.ReadPersonId(new Person { FirstName = "Asim", LastName = "Ajanic" });
-            //var Djulsuma = db.ReadPersonId(new Person { FirstName = "Djulsuma", LastName = "Puzic" });
-            //db.SetParents(new Person { ID = Elvedin, FatherId = Asim, MotherId = Djulsuma });
-            //var Zenjil = db.ReadPersonId(new Person { FirstName = "Zenjil", LastName = "Niksic" });
-            //var Azra = db.ReadPersonId(new Person { FirstName = "Azra", LastName = "Duranovic" });
-            //db.SetParents(new Person { ID = Denana, FatherId = Zenjil, MotherId = Azra });
-
-
-
-
+            MainMenu();
 
         }
 
 
-        public void AddPerson()
+        public static void AddPerson()
         {
             Person person = new Person();
             Console.Write("Enter a first name: ");
@@ -99,28 +43,138 @@ namespace Inlamning1DB
                     Console.WriteLine(myInt + ". " + item.FirstName + " " + item.LastName);
                     myInt++;                    
                 }
-                Console.WriteLine("Choose a number");
-                Console.ReadLine();
+                int nr;
+                do
+                {
 
-                // be användaren om en siffra - klar!!!
-                // läs in användarens svar i en variabel.
-                // kolla så att siffran inte är utanför listans gräns
-                // välja ut personen ur listan som stämmer överens med användarens svar.
-                // stoppa personen i en egen Person variabel.
+                    Console.WriteLine("Choose a number");
+
+                    int.TryParse(Console.ReadLine(), out nr);
+
+                } while (nr > people.Count || nr <= 0);
+                var person = people[nr - 1];
+                people = db.ReadPerson(people[nr-1].FirstName);
 
 
+                SelectedPerson(person);
 
-                // 1. Be användaren om ett namn. Klar!!!
-                // 2. skicka in namnet i ReadPerson och kolla om det finns några personer med det namnet. klar !!!
-                // 3. a) skapa en int som har värdet 1 ovanför foreach-loopen på rad 96. klar!!!
-                // 3. b) skriv ut din int först i cw klar!!!
-                // 3. c) Om listan som kommer tillbaka inte är tom visa personerna i listan. klar!!!
-                // 4. låt användaren välja den personen som har hittats.
-                // 5. om listan är tom skriv ut att det inte fanns någon match.
+           
 
+            }
+
+         
+        }
+
+        public static void UpdatePerson(Person person)
+        {
+            Console.WriteLine("Vad vill du ändra?");
+            Console.WriteLine("1. Förnamn");
+            Console.WriteLine("2. Efternamn");
+            Console.WriteLine("3. Mamma");
+            Console.WriteLine("4. Pappa");
+            Console.WriteLine("5. Ta bort person");
+           
+            Console.Write("> ");
+            var db = new Databas();
+            int.TryParse(Console.ReadLine(), out int chooise);
+            switch (chooise)
+            {
+                case 1:
+                    Console.Write("Ange förnamn: ");
+                    person.FirstName = Console.ReadLine();
+                    break;
+                case 2:
+                    Console.Write("Ange efternamn: ");
+                    person.LastName = Console.ReadLine();
+                    break;
+                case 3:
+                    Console.Write("Ange Mamma: ");
+                    string name = Console.ReadLine();
+                    var mother = db.ReadPerson(name);
+                    person.MotherId = mother[0].ID;
+                    break;
+                case 4:
+                    Console.Write("Ange Pappa: ");
+                    name = Console.ReadLine();
+                    var father = db.ReadPerson(name);
+                    person.FatherId = father[0].ID;
+                        break;
+                case 5:
+                    db.DeletePerson(person);
+                    MainMenu();
+                    break;
+                    
+                default:
+                    break;
+            }
+            db.UpdatePerson(person);
+        }
+
+        private static void MainMenu()
+        {
+            while (true)
+            {
+
+                Console.Clear();
+                Console.WriteLine("1. Add person");
+                Console.WriteLine("2. Find person");
+                Console.WriteLine("E. Exit program");
+                Console.Write("> ");
+                var chooise = Console.ReadLine();
+                if (chooise == "1")
+                {
+                    AddPerson();
+                }
+                else if (chooise == "2")
+                {
+                    FindPerson();
+                }
+                else if (chooise.ToUpper() == "E")
+                {
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input try again");
+                    Console.ReadKey();
+                }
 
 
             }
+     
+        }
+        public static void SelectedPerson(Person person)
+        {
+            Console.WriteLine("Vad vill du göra?");
+            Console.WriteLine("1. Visa föräldrar");
+            Console.WriteLine("2. Uppdatera person");
+            Console.Write("> ");
+            var choice = Console.ReadLine();
+            if (choice == "1")
+            {
+                ShowParents(person);
+            }
+            else if (choice == "2")
+            {
+                UpdatePerson(person);
+            }
+            else
+            {
+                MainMenu();
+            }
+        }
+        private static void ShowParents(Person person)
+        {
+            var db = new Databas();
+            
+            List<Person> parents = new List<Person>();
+            parents.Add(db.ReadPersonById(person.MotherId));
+            parents.Add(db.ReadPersonById(person.FatherId));
+            foreach (var parent in parents)
+            {
+                Console.WriteLine(parent.FirstName + " " + parent.LastName);
+            }
+            Console.ReadLine();
         }
     }
 }

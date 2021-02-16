@@ -44,9 +44,6 @@ namespace Inlamning1DB
             }
         }
 
-        /// <summary>
-        /// Skapar upp tabellen Familj.
-        /// </summary>
         internal void CreateTable()
         {
             string createTable = "CREATE TABLE Familj (" +
@@ -61,6 +58,7 @@ namespace Inlamning1DB
 
         internal void InsertMembers()
         {
+            ExecuteQuery("SET IDENTITY_INSERT Familj ON ");
             var filename = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\personer.txt");
             if (File.Exists(filename))
             {
@@ -70,8 +68,11 @@ namespace Inlamning1DB
                     //Console.WriteLine(item);
                     var split = item.Split(", ");
                     var person = new Person();
-                    person.FirstName = split[0].Trim();
-                    person.LastName = split[1].Trim();
+                    person.ID = int.Parse(split[0]);
+                    person.FirstName = split[1].Trim();
+                    person.LastName = split[2].Trim();
+                    person.MotherId = int.Parse(split[3]);
+                    person.FatherId = int.Parse(split[4]);
                     CreatePerson(person);
                 }
             }
@@ -115,9 +116,6 @@ namespace Inlamning1DB
             return dt; // returnerar datatable
         }
 
-        /// <summary>
-        /// koppla till databasen
-        /// </summary>
         public SqlConnection OpenConnection()
         {
             var conString = string.Format(ConnectionString, DatabaseName);
@@ -129,10 +127,11 @@ namespace Inlamning1DB
 
         public void CreatePerson(Person person)
         {
-            string sql = "insert into Familj (FirstName, LastName, MotherId, FatherId)" +
-                 "values (@FirstName, @LastName, @MotherId, @FatherId)";
+            string sql = "SET IDENTITY_INSERT Familj ON; insert into Familj (Id, FirstName, LastName, MotherId, FatherId)" +
+                 "values (@Id, @FirstName, @LastName, @MotherId, @FatherId)";
             var parameters = new (string, string)[]
             {
+                ("@Id", person.ID.ToString()),
                 ("@FirstName", person.FirstName),
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
@@ -143,7 +142,7 @@ namespace Inlamning1DB
 
         public void DeletePerson(Person person)
         {
-            string sql = "DELETE FROM PersonT Where PersonId=@PersonId";
+            string sql = "DELETE FROM Familj Where Id=@Id";
                
             var parameters = new (string, string)[]
             {
@@ -151,28 +150,30 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
-                ("@PersonId", person.ID.ToString()),
+                ("@Id", person.ID.ToString()),
 
 
             };
             ExecuteQuery(sql, parameters);
         }
 
-        public DataTable ReadPerson(Person person)
-        {
-            string sql = "Select * FROM PersonT Where FirstName=@FirstName OR LastName=@LastName";
 
-            var parameters = new (string, string)[]
+        internal Person ReadPersonById(int id)
+        {
+            string sql = "SELECT * FROM Familj WHERE Id= @Id";
+            DataTable dt = ExecuteQueryWithTable(sql, ("@Id", id.ToString()));
+            if (dt.Rows.Count > 0)
             {
-                ("@FirstName", person.FirstName),
-                ("@LastName", person.LastName),
-            };
-            return ExecuteQueryWithTable(sql, parameters);
+                return ConvertToPerson(dt.Rows[0]);
+            }
+            return new Person();
         }
+
+     
 
         public  void UpdatePerson(Person person)
         {
-            string sql = "UPDATE PersonT Set FirstName=@FirstName, LastName=@LastName, MotherId=@MotherId, FatherId=@FatherId WHERE PersonId=@PersonId";
+            string sql = "UPDATE Familj Set FirstName=@FirstName, LastName=@LastName, MotherId=@MotherId, FatherId=@FatherId WHERE Id=@Id";
 
             var parameters = new (string, string)[]
             {
@@ -180,7 +181,7 @@ namespace Inlamning1DB
                 ("@LastName", person.LastName),
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
-                ("@PersonId", person.ID.ToString()),
+                ("@Id", person.ID.ToString()),
 
 
 
@@ -222,20 +223,16 @@ namespace Inlamning1DB
             if (dt.Rows.Count > 0)
             {
                 DataRow row = dt.Rows[0];
-                var Id = (int)row["PersonId"];
+                var Id = (int)row["Id"];
                 return Id;
             }
             return 0;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+    
         public List<Person> ReadPerson(string name)
         {
             string sql = "SELECT * FROM Familj WHERE FirstName LIKE @FirstName";
-            DataTable dt = ExecuteQueryWithTable(sql, ("@FirstName", $"{name}%"));
+            DataTable dt = ExecuteQueryWithTable(sql, ("@FirstName", $"%{name}%"));
             List<Person> people = new List<Person>();
             if (dt.Rows.Count > 0)
             {
@@ -246,19 +243,7 @@ namespace Inlamning1DB
             }
             return people;
         }
-        // 1. a) gör anrop till databasen of fråga efter alla personer med namnet du fått in. klar!!!
-        // 1. b) kolla om datatable innehåller någon person. klar!!!
-        // 1. c) omvandla varje rad i dt.Rows till ett person-objekt och lägg till i en lista. klar!!!
-        // 2. returnera listan av Person. klar !!!
-        // 3. skriv en sammanfattning om vad metoden gör...
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
+      
         private Person ConvertToPerson(DataRow row)
         {
             Person person = new Person();
@@ -270,16 +255,7 @@ namespace Inlamning1DB
             return person;
         }
 
-        // Ska ta varje kolumn i row och stoppa in i varje prop i person.
-        // 1. Skapa en ny Person och döp den till person. klar!!
-        // 2. Tilldela sedan varje prop i person ett värde från row.
-        //      tex. person.FirstName = row["FirstName"]; klar!!!
-        // 3. returnera person. klar!!!
-        // 4. Skriv en sammanfattning om vad metoden gör!
 
-
-
-        
         public int IfNotExist(Person person)
         {
             var id = ReadPersonId(person);

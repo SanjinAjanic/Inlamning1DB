@@ -1,10 +1,15 @@
-Elvedin, Ajanic
-Denana, Niksic
-Zenjil, Niksic
-Asim, Ajanic
-Azra, Duranovic
-Djulsuma, Puzic
-Sanjin, Ajanic
-Sefika, Koluder
-Ismet, Duranovic
-Mustafa, Niksic
+1, Elvedin, Ajanic, 6, 4
+2, Denana, Niksic, 5, 3
+3, Zenjil, Niksic, 11, 10
+4, Asim, Ajanic, 13, 12
+5, Azra, Duranovic, 8, 9
+6, Djulsuma, Puzic, 15, 14
+7, Sanjin, Ajanic, 5, 3
+8, Sefika, Koluder, 0, 0
+9, Ismet, Duranovic, 0, 0
+10, Mustafa, Niksic, 0, 0
+11, Hatidza, Ceric, 0, 0
+12, Mustafa, Ajanic, 0, 0
+13, Fata, Leto, 0, 0
+14, Alija, Puzic, 0, 0
+15, Murta, Mahmutcehajic, 0, 0
