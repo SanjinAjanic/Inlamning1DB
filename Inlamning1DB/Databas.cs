@@ -169,8 +169,6 @@ namespace Inlamning1DB
             return new Person();
         }
 
-     
-
         public  void UpdatePerson(Person person)
         {
             string sql = "UPDATE Familj Set FirstName=@FirstName, LastName=@LastName, MotherId=@MotherId, FatherId=@FatherId WHERE Id=@Id";
@@ -182,8 +180,6 @@ namespace Inlamning1DB
                 ("@MotherId", person.MotherId.ToString()),
                 ("@FatherId", person.FatherId.ToString()),
                 ("@Id", person.ID.ToString()),
-
-
 
             };
             ExecuteQuery(sql, parameters);
@@ -200,8 +196,6 @@ namespace Inlamning1DB
                 ("@FatherId", person.FatherId.ToString()),
                 ("@PersonId", person.ID.ToString()),
 
-
-
             };
             ExecuteQuery(sql, parameters);
         }
@@ -215,7 +209,6 @@ namespace Inlamning1DB
             {
                 ("@FirstName", person.FirstName),
                 ("@LastName", person.LastName),
-               
 
             };
 

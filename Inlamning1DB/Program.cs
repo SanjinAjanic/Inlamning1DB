@@ -58,8 +58,6 @@ namespace Inlamning1DB
 
                 SelectedPerson(person);
 
-           
-
             }
 
          
@@ -67,34 +65,33 @@ namespace Inlamning1DB
 
         public static void UpdatePerson(Person person)
         {
-            Console.WriteLine("Vad vill du ändra?");
-            Console.WriteLine("1. Förnamn");
-            Console.WriteLine("2. Efternamn");
-            Console.WriteLine("3. Mamma");
-            Console.WriteLine("4. Pappa");
-            Console.WriteLine("5. Ta bort person");
-           
+            Console.WriteLine("What do you want to change?");
+            Console.WriteLine("1. Firstname");
+            Console.WriteLine("2. Lastname");
+            Console.WriteLine("3. Mother");
+            Console.WriteLine("4. Father");
+            Console.WriteLine("5. Delete person");
             Console.Write("> ");
             var db = new Databas();
             int.TryParse(Console.ReadLine(), out int chooise);
             switch (chooise)
             {
                 case 1:
-                    Console.Write("Ange förnamn: ");
+                    Console.Write("Enter Firstname : ");
                     person.FirstName = Console.ReadLine();
                     break;
                 case 2:
-                    Console.Write("Ange efternamn: ");
+                    Console.Write("Enter Lastname : ");
                     person.LastName = Console.ReadLine();
                     break;
                 case 3:
-                    Console.Write("Ange Mamma: ");
+                    Console.Write("Enter Mother : ");
                     string name = Console.ReadLine();
                     var mother = db.ReadPerson(name);
                     person.MotherId = mother[0].ID;
                     break;
                 case 4:
-                    Console.Write("Ange Pappa: ");
+                    Console.Write("Enter Father : ");
                     name = Console.ReadLine();
                     var father = db.ReadPerson(name);
                     person.FatherId = father[0].ID;
@@ -145,9 +142,9 @@ namespace Inlamning1DB
         }
         public static void SelectedPerson(Person person)
         {
-            Console.WriteLine("Vad vill du göra?");
-            Console.WriteLine("1. Visa föräldrar");
-            Console.WriteLine("2. Uppdatera person");
+            Console.WriteLine("What do you want to do?");
+            Console.WriteLine("1. Show parents");
+            Console.WriteLine("2. Update person");
             Console.Write("> ");
             var choice = Console.ReadLine();
             if (choice == "1")
